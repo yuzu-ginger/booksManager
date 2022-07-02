@@ -6,7 +6,7 @@ require_relative 'button'
 
 get '/' do
     @userid=params[:id]
-    p liff.state
+    p @env
     erb :booknew
 end
 
