@@ -105,7 +105,7 @@ post '/callback' do
                             text: book_title.join("\n")
                         }
                         client.reply_message(event['replyToken'], [message, show_books])
-                    elsif event.message['text'] == /^[0-9]$/  # 削除ID
+                    elsif event.message['text'] =~ /^[0-9]$/  # 削除ID
                         book_id = ""
                         books.each do |x|
                             if x['id'] == event.message['text']
