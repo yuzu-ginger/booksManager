@@ -95,7 +95,7 @@ post '/callback' do
                     end
                     p book_title
                     message = {
-                        type: "text",
+                        type: 'text',
                         text: book_title
                     }
                     client.reply_message(event['replyToken'], [message, show_books])
