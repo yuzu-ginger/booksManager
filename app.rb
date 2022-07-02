@@ -14,7 +14,7 @@ connect = PG::connect(
 )
 
 get '/' do   # 登録form
-    params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
+    params[:id] = @env["QUERY_STRING"].match(/2F/).post_match
     id = params[:id]
     p id
     erb :booknew
