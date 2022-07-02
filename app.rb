@@ -18,7 +18,7 @@ get '/' do   # 登録form
     if option == "A"
         @id = id
         @results = connect.exec("SELECT * FROM books WHERE userid=#{@id};")
-        results.each do |result|
+        @results.each do |result|
             p result['userid']
         end
         erb :index
