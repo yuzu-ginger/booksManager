@@ -119,7 +119,7 @@ post '/callback' do
                         else    # 削除ボタン
                             client.reply_message(event['replyToken'], delete_book(title, book_id))
                         end
-                    elsif event.message == "delete"
+                    elsif event.message['text'] == "delete"
                         inp_title = event.message['text']
                         book_info = []
                         book_title = []
