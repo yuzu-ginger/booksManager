@@ -1,4 +1,4 @@
-def form
+def form(id)
   choice1 = "本を登録する"
   {
       "type": "template",
