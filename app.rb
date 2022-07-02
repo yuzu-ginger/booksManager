@@ -107,6 +107,7 @@ post '/callback' do
                         client.reply_message(event['replyToken'], [message, show_books])
                     elsif event.message['text'] =~ /^[0-9]$/  # 削除ID
                         book_id = ""
+                        title = ""
                         books.each do |x|
                             if x['id'] == event.message['text']
                                 book_id = x['id']
