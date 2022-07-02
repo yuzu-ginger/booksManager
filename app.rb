@@ -140,7 +140,7 @@ post '/callback' do
                             }
                             client.reply_message(event['replyToken'], message)
                         elsif count == 1
-                            client.reply_message(event['replyToken'], delete_book(title, book_id[0]))
+                            client.reply_message(event['replyToken'], delete_book(book_title[0], book_id[0]))
                         else
                             message = {
                                 type: 'text',
