@@ -5,37 +5,35 @@ require 'pg'
 require_relative 'button'
 
 userid = ""
+connect = PG::connect(
+    host: ENV["PSQL_HOST"],
+    user: ENV["PSQL_USER"],
+    password: ENV["PSQL_PASS"],
+    dbname: ENV["PSQL_DBNAME"],
+    port: "5432"
+)
 
 get '/' do
     params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
     userid = params[:id]
-    p userid
-    # # p @userid
     erb :booknew
 end
 
 post '/book' do
-    @userid = params[:userid]
-    p userid
+    # p userid
     @title = params[:title]
     @author = params[:author]
-    @body = params[:body]
+    @publisher = params[:publisher]
+    connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}, '#{@author}, '#{@publisher}');")
     erb :book
 end
 
 def find_id(userid)
-    connect = PG::connect(
-        host: ENV["PSQL_HOST"],
-        user: ENV["PSQL_USER"],
-        password: ENV["PSQL_PASS"],
-        dbname: ENV["PSQL_DBNAME"],
-        port: "5432"
-    )
     results = connect.exec("SELECT * FROM userindex")
-    return reply_id(connect, results, userid)
+    return reply_id(results, userid)
 end
 
-def reply_id(connect, results, userid)   # useridに対応するidを返す.なければ作る
+def reply_id(results, userid)   # useridに対応するidを返す.なければ作る
     results.each do |result|
         if result['userid'] == userid
             return result['id']
