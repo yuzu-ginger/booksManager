@@ -4,8 +4,8 @@ require 'line/bot'
 require 'pg'
 require_relative 'button'
 
-get '/?liff.state=%2F:id' do
-    @userid=params[:id]
+get '/?liff.state=%2F1' do
+    # @userid=params[:id]
     erb :index
 end
 
