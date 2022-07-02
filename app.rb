@@ -3,7 +3,13 @@ require 'sinatra'
 require 'line/bot'
 
 get '/' do
-    erb :index
+    erb :booknew
+end
+
+post '/book' do
+    @title = params[:title]
+    @author = params[:author]
+    erb :book
 end
 
 def client
