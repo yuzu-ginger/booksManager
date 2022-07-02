@@ -86,17 +86,15 @@ post '/callback' do
                     books = find_books(connect, id)
                     book_title = []
                     if books.empty?
-                        book_title = "登録された本はありません"
+                        book_title << "登録された本はありません"
                     else
                         books.each do |x|
                             book_title << "・#{x['title']}"
                         end
-                        book_title.join("\n")
                     end
-                    book_title = "あいうえお"
                     message = {
                         type: 'text',
-                        text: book_title
+                        text: book_title.join("\n")
                     }
                     client.reply_message(event['replyToken'], [message, show_books])
                 else
