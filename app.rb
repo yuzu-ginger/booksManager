@@ -132,11 +132,18 @@ post '/callback' do
                         book_id = []
                         count = 0
                         books.each do |x|
-                            if x['title'] =~ /#{inp_title}/
+                            if inp_title == "delete"
                                 book_title << x['title']
                                 book_id << x['id']
                                 book_info << "・ID #{x['id']}：#{x['title']}"
                                 count += 1
+                            else
+                                if x['title'] =~ /#{inp_title}/
+                                    book_title << x['title']
+                                    book_id << x['id']
+                                    book_info << "・ID #{x['id']}：#{x['title']}"
+                                    count += 1
+                                end
                             end
                         end
                         if count == 0
