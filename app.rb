@@ -14,8 +14,7 @@ connect = PG::connect(
 )
 
 get '/' do   # 登録form
-    option = @env["QUERY_STRING"].match(/2F/).post_match
-    if option == "A"
+    if @env["QUERY_STRING"]
         @id = id
         @results = connect.exec("SELECT * FROM books WHERE userid=#{@id};")
         erb :index
