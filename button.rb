@@ -44,7 +44,7 @@ def show_books
   }
 end
 
-def confirm(title, book_id)
+def delete_book(title, book_id)
   {
     "type": "template",    # 必須
     "altText": "本の削除",   # 必須
