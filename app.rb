@@ -8,7 +8,7 @@ get '/' do
     params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
     @userid = params[:id]
     # p @userid
-    erb :booknew
+    erb :booknew(@userid)
 end
 
 post '/book' do
