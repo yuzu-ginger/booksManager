@@ -18,9 +18,6 @@ get '/' do   # 登録form
     if option == "A"
         @id = id
         @results = connect.exec("SELECT * FROM books WHERE userid=#{@id};")
-        @results.each do |result|
-            p result['userid']
-        end
         erb :index
     else
         erb :booknew
@@ -51,12 +48,10 @@ def reply_id(connect, results, userid)   # useridに対応するidを返す.な�
 end
 
 def find_books(connect, id)
-    results = connect.exec("SELECT * FROM books;")
+    results = connect.exec("SELECT * FROM books where userid=#{id};")
     books = []
     results.each do |result|
-        if result['userid'] == id
-            books << "・#{result['title']}"
-        end
+        books << "・#{result['title']}"
     end
     return books
 end

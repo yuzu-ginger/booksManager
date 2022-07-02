@@ -17,11 +17,9 @@
           <tbody>
             <% @results.each do |result|%>
               <tr>
-                <% if result['userid'] == @id %>
-                  <td><%= result['title'] %></td>
-                  <td><%= result['author'] %></td>
-                  <td><%= result['publisher'] %></td>
-                <% end %>
+                <td><%= result['title'] %></td>
+                <td><%= result['author'] %></td>
+                <td><%= result['publisher'] %></td>
               </tr>
             <% end %>
           </tbody>
