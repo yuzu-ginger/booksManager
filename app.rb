@@ -20,8 +20,8 @@ get '/' do   # 登録form
         erb :index
     else
         @id = id.to_i
-        @results = connect.exec("SELECT * FROM books")
-        p @resutlts
+        @results = connect.exec("SELECT * FROM books;")
+        p @resutlts || -1
         erb :booknew
     end
 end
@@ -35,7 +35,7 @@ post '/book' do   # 登録完了ページ
 end
 
 def find_id(connect, userid)
-    results = connect.exec("SELECT * FROM userindex")
+    results = connect.exec("SELECT * FROM userindex;")
     return reply_id(connect, results, userid)
 end
 
@@ -50,7 +50,7 @@ def reply_id(connect, results, userid)   # useridに対応するidを返す.な�
 end
 
 def find_books(connect, id)
-    results = connect.exec("SELECT * FROM books")
+    results = connect.exec("SELECT * FROM books;")
     books = []
     results.each do |result|
         if result['userid'] == id
