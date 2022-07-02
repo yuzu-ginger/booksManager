@@ -6,7 +6,8 @@ get '/' do
     erb :booknew
 end
 
-post '/book' do
+post '/book/:id' do
+    "Hello, #{params[:id]}"
     @title = params[:title]
     @author = params[:author]
     @body = params[:body]
