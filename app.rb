@@ -1,10 +1,11 @@
 require 'bundler/setup'
 require 'sinatra'
 require 'line/bot'
+require_relative 'button'
 
 get '/:id' do
-    "Hello, #{params[:id]}"
-    #erb :booknew
+    @userid=params[:id]
+    erb :booknew
 end
 
 post '/book' do
@@ -12,6 +13,29 @@ post '/book' do
     @author = params[:author]
     @body = params[:body]
     erb :book
+end
+
+def find_id(userid)
+    connect = PG::connect(
+        host: ENV["PSQL_HOST"],
+        user: ENV["PSQL_USER"],
+        password: ENV["PSQL_PASS"],
+        dbname: ENV["PSQL_DBNAME"],
+        port: "5432"
+    )
+    results = connect.exec("SELECT * FROM userindedx")
+    return reply_id(results)
+end
+
+def reply_id   # useridに対応するidを返す.なければ作る
+    results.each do |result|
+        if result['userid'] == userid
+            return result['id']
+        else
+            connect.exec("INSERT INTO userindex (userid) VALUES ('#{userid}');")
+            return find_id(userid)
+        end
+    end
 end
 
 def client
@@ -32,15 +56,15 @@ post '/callback' do
     events = client.parse_events_from(body)
   
     events.each do |event|
+        userid = event['source']['userId']
+        id = find_id(userid)
         case event
         when Line::Bot::Event::Message
             case event.type
             when Line::Bot::Event::MessageType::Text
-                message = {
-                    type: 'text',
-                    text: event.message['text']
-                }
-                client.reply_message(event['replyToken'], message)
+                if event.message['text'] == "新規登録"
+                    client.reply_message(event['replyToken'], form(id))
+                end
             end
         end
     end
