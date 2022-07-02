@@ -21,6 +21,7 @@ get '/' do   # 登録form
     else
         @id = id.to_i
         @results = connect.exec("SELECT * FROM books")
+        p @resutlts
         erb :booknew
     end
 end
