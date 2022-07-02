@@ -6,7 +6,7 @@ require_relative 'button'
 
 get '/' do
     @userid=params[:id]
-    p @env["QUERY_STRING"].slice(/^F/)
+    p @env["QUERY_STRING"].match(/2F/).post_match
     erb :booknew
 end
 
