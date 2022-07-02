@@ -12,6 +12,8 @@ get '/' do
 end
 
 post '/book' do
+    @userid = params[:userid]
+    p @userid
     @title = params[:title]
     @author = params[:author]
     @body = params[:body]
