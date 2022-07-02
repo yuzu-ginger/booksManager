@@ -51,7 +51,7 @@ def find_books(connect, id)
     results = connect.exec("SELECT * FROM books where userid=#{id};")
     books = []
     results.each do |result|
-        books << "・#{result['title']}"
+        books << {"id"=>result['id'], "title"=>result['title']}
     end
     return books
 end
@@ -80,20 +80,27 @@ post '/callback' do
         when Line::Bot::Event::Message
             case event.type
             when Line::Bot::Event::MessageType::Text
-                if event.message['text'] == "新規登録"
+                if event.message['text'] == "new"
                     client.reply_message(event['replyToken'], form)
-                elsif event.message['text'] == "一覧"
+                elsif event.message['text'] == "index"
                     books = find_books(connect, id)
                     if books.empty?
-                        books = "登録された本はありません"
+                        text = "登録された本はありません"
                     else
-                        books = books.join("\n")
+                        text = []
+                        books.each do |x|
+                            text << x['title']
+                        end
+                        text.join("\n")
                     end
                     message = {
                         type: "text",
-                        text: books
+                        text: text
                     }
                     client.reply_message(event['replyToken'], [message, show_books])
+                else
+                    inp_title = event.message['text']
+                    books = find_books(connect, id)
                 end
             end
         end
