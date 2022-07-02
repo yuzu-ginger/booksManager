@@ -14,14 +14,15 @@ connect = PG::connect(
 )
 
 get '/' do   # 登録form
-    p id
-    id = @env["QUERY_STRING"].match(/2F/).post_match
-    if id[0] == "A"
-        @id = id.match(/2F/).post_match
-        @results = connect.exec("SELECT * FROM books;")
+    option = @env["QUERY_STRING"].match(/2F/).post_match
+    if option == "A"
+        @id = id
+        @results = connect.exec("SELECT * FROM books WHERE userid=#{@id};")
+        results.each do |result|
+            p result['userid']
+        end
         erb :index
     else
-        @id = id.to_i
         erb :booknew
     end
 end
@@ -85,7 +86,7 @@ post '/callback' do
             case event.type
             when Line::Bot::Event::MessageType::Text
                 if event.message['text'] == "新規登録"
-                    client.reply_message(event['replyToken'], form(id))
+                    client.reply_message(event['replyToken'], form)
                 elsif event.message['text'] == "一覧"
                     books = find_books(connect, id)
                     if books.empty?
@@ -97,7 +98,7 @@ post '/callback' do
                         type: "text",
                         text: books
                     }
-                    client.reply_message(event['replyToken'], [message, show_books(id)])
+                    client.reply_message(event['replyToken'], [message, show_books])
                 end
             end
         end

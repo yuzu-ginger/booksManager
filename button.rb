@@ -1,4 +1,4 @@
-def form(id)
+def form
   choice1 = "本を登録する"
   {
       "type": "template",
@@ -14,14 +14,14 @@ def form(id)
               {
                   type: 'uri',
                   label: choice1,   # 必須または任意
-                  uri: "https://liff.line.me/1657269514-NWB4YYMB/#{id}"  # 必須
+                  uri: "https://liff.line.me/1657269514-NWB4YYMB/"  # 必須
               }
           ]
       }
   }
 end
 
-def show_books(id)
+def show_books
   choice1 = "詳細"
   {
       "type": "template",
@@ -37,7 +37,7 @@ def show_books(id)
               {
                   type: 'uri',
                   label: choice1,   # 必須または任意
-                  uri: "https://liff.line.me/1657269514-NWB4YYMB/A/#{id}"  # 必須
+                  uri: "https://liff.line.me/1657269514-NWB4YYMB/A"  # 必須
               }
           ]
       }
