@@ -12,7 +12,7 @@ get '/' do
 end
 
 post '/book' do
-    p @userid
+    p params[:id]
     @title = params[:title]
     @author = params[:author]
     @body = params[:body]
