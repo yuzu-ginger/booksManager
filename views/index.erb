@@ -9,7 +9,7 @@
         <% @results.each do |result|%>
           <%= result['title']%>
           <% if result['userid'] == @id %>
-            <%= result['title'] %>
+            <%= result['author'] %>
           <% end %>
         <% end %>
     </body>
