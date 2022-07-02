@@ -126,6 +126,7 @@ post '/callback' do
                         book_id = []
                         count = 0
                         books.each do |x|
+                            p [x['title'].ord, inp_title.ord]
                             if x['title'] =~ /#{inp_title}/
                                 book_title << x['title']
                                 book_id << x['id']
