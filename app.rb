@@ -5,8 +5,9 @@ require 'pg'
 require_relative 'button'
 
 get '/' do
+    :id = @env["QUERY_STRING"].match(/2F/).post_match
     @userid=params[:id]
-    p @env["QUERY_STRING"].match(/2F/).post_match
+    p @userid
     erb :booknew
 end
 
