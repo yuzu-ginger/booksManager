@@ -84,19 +84,18 @@ post '/callback' do
                     client.reply_message(event['replyToken'], form)
                 elsif event.message['text'] == "index"
                     books = find_books(connect, id)
+                    book_title = []
                     if books.empty?
-                        text = "登録された本はありません"
+                        book_title = "登録された本はありません"
                     else
-                        text = []
                         books.each do |x|
-                            text << x['title']
+                            book_title << x['title']
                         end
-                        text.join("\n")
+                        book_title.join("\n")
                     end
-                    p text
                     message = {
                         type: "text",
-                        text: text
+                        text: book_title
                     }
                     client.reply_message(event['replyToken'], [message, show_books])
                 else
