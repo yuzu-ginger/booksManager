@@ -6,13 +6,13 @@ require_relative 'button'
 
 get '/' do
     params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
-    @userid = params[:id]
+    @@userid = params[:id]
     # p @userid
-    erb :booknew(@userid)
+    erb :booknew
 end
 
 post '/book' do
-    p params[:id]
+    p @@userid
     @title = params[:title]
     @author = params[:author]
     @body = params[:body]
