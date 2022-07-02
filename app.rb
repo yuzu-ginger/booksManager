@@ -15,14 +15,14 @@ connect = PG::connect(
 
 get '/' do   # 登録form
     id = @env["QUERY_STRING"].match(/2F/).post_match
-    if id == /^[0-9]$/
-        id = id.to_i
-        p id
-        erb :booknew
-    else
+    if id[0] == "A"
         id = id.match(/2F/).post_match.to_i
         p id
         erb :index
+    else
+        id = id.to_i
+        p id
+        erb :booknew
     end
 end
 
