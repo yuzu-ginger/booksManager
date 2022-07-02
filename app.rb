@@ -6,7 +6,7 @@ require_relative 'button'
 
 get '/' do
     @userid=params[:id]
-    erb :newbook
+    erb :booknew
 end
 
 post '/book' do
