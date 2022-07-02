@@ -17,11 +17,11 @@ get '/' do   # 登録form
     id = @env["QUERY_STRING"].match(/2F/).post_match
     if id[0] == "A"
         id = id.match(/2F/).post_match.to_i
+        @results = connect.exec("SELECT * FROM books;")
+        p @resutlts || -1
         erb :index
     else
         @id = id.to_i
-        @results = connect.exec("SELECT * FROM books;")
-        p @resutlts || -1
         erb :booknew
     end
 end
