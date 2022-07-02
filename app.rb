@@ -3,7 +3,7 @@ require 'sinatra'
 require 'line/bot'
 
 get '/' do
-  'hello world!'
+    erb :index
 end
 
 def client
