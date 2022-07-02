@@ -24,7 +24,7 @@ post '/book' do
     @title = params[:title]
     @author = params[:author]
     @publisher = params[:publisher]
-    connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}, '#{@author}, '#{@publisher}');")
+    connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
     erb :book
 end
 
