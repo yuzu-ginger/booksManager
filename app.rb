@@ -23,7 +23,7 @@ def find_id(userid)
         dbname: ENV["PSQL_DBNAME"],
         port: "5432"
     )
-    results = connect.exec("SELECT * FROM userindedx")
+    results = connect.exec("SELECT * FROM userindex")
     return reply_id(results)
 end
 
