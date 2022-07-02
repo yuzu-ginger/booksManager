@@ -14,10 +14,9 @@ def form(id)
               {
                   type: 'uri',
                   label: choice1,   # 必須または任意
-                  uri: "https://liff.line.me/1657269514-JYwpqqmw/#{id}"  # 必須
+                  uri: "https://liff.line.me/1657269514-NWB4YYMB/#{id}"  # 必須
               }
           ]
       }
   }
-  p "https://liff.line.me/1657269514-JYwpqqmw/#{id}"
 end
