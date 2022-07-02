@@ -90,6 +90,20 @@ post '/callback' do
                 }
                 if event.message['text'] == "new"   # 新規登録
                     client.reply_message(event['replyToken'], form)
+                elsif event.message['text'] == "how to use"
+                    message1 = {
+                        type: 'text',
+                        text: "まずは「Add a new book」で本を登録しましょう！"
+                    }
+                    message2 = {
+                        type: 'text',
+                        text: "登録した本は「View all books」で見ることができます"
+                    }
+                    message3 = {
+                        type: 'text',
+                        text: "本を削除する場合は、本のタイトルの一部を入力するか、「Delete a book」をタップしてください"
+                    }
+                    client.reply_message(event['replyToken'], [message1, message2, message3])
                 else
                     books = find_books(connect, id)
                     if books.empty?    # 本棚が空のとき
