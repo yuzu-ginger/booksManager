@@ -6,12 +6,27 @@
     
     <body>
         <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-        <% @results.each do |result|%>
-          <%= result['title']%>
-          <% if result['userid'] == @id %>
-            <%= result['author'] %>
-          <% end %>
-        <% end %>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>タイトル<th>
+              <th>書名</th>
+              <th>著者名</th>
+              <th>版元</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @results.each do |result|%>
+              <tr>
+                <% if result['userid'] == @id %>
+                  <td><%= result['title'] %></td>
+                  <td><%= result['author'] %></td>
+                  <td><%= result['publisher'] %></td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
     </body>
     
 </html>
