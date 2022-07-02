@@ -19,4 +19,5 @@ def form(id)
           ]
       }
   }
+  p "https://liff.line.me/1657269514-JYwpqqmw/#{id}"
 end
