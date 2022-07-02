@@ -97,14 +97,20 @@ post '/callback' do
                     end
                     if event.message['text'] == "index"  # 蔵書一覧
                         book_title = []
+                        count = 0
                         books.each do |x|
+                            count += 1
                             book_title << "・#{x['title']}"
                         end
                         message = {
                             type: 'text',
+                            text: "#{count}冊の本が見つかりました"
+                        }
+                        book_text = {
+                            type: 'text',
                             text: book_title.join("\n")
                         }
-                        client.reply_message(event['replyToken'], [message, show_books])
+                        client.reply_message(event['replyToken'], [message, book_text, show_books])
                     elsif event.message['text'] =~ /^[0-9]$/  # 削除ID
                         book_id = ""
                         title = ""
