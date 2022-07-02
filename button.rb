@@ -60,7 +60,7 @@ def delete_book(title, book_id)
             },
             {
                 "type": "postback",
-                "label": "はい",
+                "label": "いいえ",
                 "data": "nothing",
                 "displayText": "いいえ",
             }
