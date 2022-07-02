@@ -4,7 +4,7 @@ require 'line/bot'
 require 'pg'
 require_relative 'button'
 
-userid = ""
+id = ""
 connect = PG::connect(
     host: ENV["PSQL_HOST"],
     user: ENV["PSQL_USER"],
@@ -15,7 +15,7 @@ connect = PG::connect(
 
 get '/' do   # 登録form
     params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
-    userid = params[:id]
+    id = params[:id]
     erb :booknew
 end
 
@@ -23,7 +23,7 @@ post '/book' do   # 登録完了ページ
     @title = params[:title]
     @author = params[:author]
     @publisher = params[:publisher]
-    @error = true unless connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
+    @error = true unless connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{id.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
     erb :book
 end
 
@@ -42,15 +42,15 @@ def reply_id(connect, results, userid)   # useridに対応するidを返す.な�
     return find_id(connect, userid)
 end
 
-def find_books(connect, userid)
+def find_books(connect, id)
     results = connect.exec("SELECT * FROM books")
     books = []
     results.each do |result|
-        if result['userid'] == userid
+        if result['userid'] == id
             books << "・#{result['title']}"
         end
     end
-    return books == [] ? "登録された本はありません" : books
+    return books
 end
 
 def client
@@ -80,10 +80,15 @@ post '/callback' do
                 if event.message['text'] == "新規登録"
                     client.reply_message(event['replyToken'], form(id))
                 elsif event.message['text'] == "一覧"
-                    books = find_books(connect, userid)
+                    books = find_books(connect, id)
+                    if books.empty?
+                        books = "登録された本はありません"
+                    else
+                        books = books.join("\n")
+                    end
                     message = {
                         type: "text",
-                        text: books.join("\n")
+                        text: books
                     }
                     client.reply_message(event['replyToken'], message)
                 end
