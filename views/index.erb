@@ -6,7 +6,11 @@
     
     <body>
         <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-        ok
+        <% @results.each do |result|%>
+          <%= if result['userid'] == @id %>
+            <%= result['title'] %>
+          <%= end %>
+        <%= end %>
     </body>
     
 </html>

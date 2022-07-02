@@ -15,13 +15,12 @@ connect = PG::connect(
 
 get '/' do   # 登録form
     id = @env["QUERY_STRING"].match(/2F/).post_match
-    if id[0] == "A"
+    if id[0] == "index"
         id = id.match(/2F/).post_match.to_i
-        p id
         erb :index
     else
-        id = id.to_i
-        p id
+        @id = id.to_i
+        @results = connect.exec("SELECT * FROM books")
         erb :booknew
     end
 end
