@@ -119,20 +119,17 @@ post '/callback' do
                         else    # 削除ボタン
                             client.reply_message(event['replyToken'], delete_book(title, book_id))
                         end
-                    else   # 文字列(タイトルとして検索)
+                    elsif event.message == "delete"
                         inp_title = event.message['text']
                         book_info = []
                         book_title = []
                         book_id = []
                         count = 0
                         books.each do |x|
-                            p [x['title'].ord, inp_title.ord]
-                            if x['title'] =~ /#{inp_title}/
-                                book_title << x['title']
-                                book_id << x['id']
-                                book_info << "・ID #{x['id']}：#{x['title']}"
-                                count += 1
-                            end
+                            book_title << x['title']
+                            book_id << x['id']
+                            book_info << "・ID #{x['id']}：#{x['title']}"
+                            count += 1
                         end
                         if count == 0
                             message = {
