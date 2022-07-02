@@ -43,3 +43,28 @@ def show_books
       }
   }
 end
+
+def confirm(title, book_id)
+  {
+    "type": "template",    # 必須
+    "altText": "本の削除",   # 必須
+    "template": {          # 必須
+        "type": "confirm",         # 必須
+        "text": "#{title}を本当に削除しますか?",   # 必須
+        "actions": [               # 必須
+            {
+                "type": "postback",
+                "label": "はい",
+                "data": "delete,#{book_id}",
+                "displayText": "はい",
+            },
+            {
+                "type": "postback",
+                "label": "はい",
+                "data": "nothing",
+                "displayText": "いいえ",
+            }
+        ]
+    }
+  }
+end

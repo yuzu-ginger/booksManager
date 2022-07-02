@@ -56,6 +56,10 @@ def find_books(connect, id)
     return books
 end
 
+def delete(connect, book_id)
+    results = connect.exec("delete from books where id=#{book_id.to_i};")
+end
+
 def client
     @client ||= Line::Bot::Client.new { |config|
       config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
@@ -80,28 +84,85 @@ post '/callback' do
         when Line::Bot::Event::Message
             case event.type
             when Line::Bot::Event::MessageType::Text
-                if event.message['text'] == "new"
+                no_book = {
+                    type: 'text',
+                    text: "まだ本が登録されていないか、該当する本がありません"
+                }
+                if event.message['text'] == "new"   # 新規登録
                     client.reply_message(event['replyToken'], form)
-                elsif event.message['text'] == "index"
+                else
                     books = find_books(connect, id)
-                    book_title = []
-                    if books.empty?
-                        book_title << "登録された本はありません"
-                    else
+                    if books.empty?    # 本棚が空のとき
+                        client.reply_message(event['replyToken'], no_book)
+                    end
+                    if event.message['text'] == "index"  # 蔵書一覧
+                        book_title = []
                         books.each do |x|
                             book_title << "・#{x['title']}"
                         end
+                        message = {
+                            type: 'text',
+                            text: book_title.join("\n")
+                        }
+                        client.reply_message(event['replyToken'], [message, show_books])
+                    elsif event.message['text'] == /^[0-9]$/  # 削除ID
+                        book_id = ""
+                        books.each do |x|
+                            if x['id'] == event.message['text']
+                                book_id = x['id']
+                                title = x['title']
+                            end
+                        end
+                        if book_id.empty?  # idが見つからなかった場合
+                            client.reply_message(event['replyToken'], no_book)
+                        else    # 削除ボタン
+                            client.reply_message(event['replyToken'], delete_book(title, book_id))
+                        end
+                    else   # 文字列(タイトルとして検索)
+                        inp_title = event.message['text']
+                        book_info = []
+                        book_title = []
+                        book_id = []
+                        count = 0
+                        books.each do |x|
+                            if x['title'] =~ /#{inp_title}/
+                                book_title << x['title']
+                                book_id << x['id']
+                                book_info << "・ID #{x['id']}：#{x['title']}"
+                                count += 1
+                            end
+                        end
+                        if count == 0
+                            message = {
+                                type: 'text',
+                                text: "「#{inp_title}」という本は見つかりませんでした"
+                            }
+                            client.reply_message(event['replyToken'], message)
+                        elsif count == 1
+                            client.reply_message(event['replyToken'], delete(book_id[0]))
+                        else
+                            message = {
+                                type: 'text',
+                                text: "#{count}冊の本がヒットしました。\n\n削除する本のIDを半角で入力してください"
+                            }
+                            book_text = {
+                                type: 'text',
+                                text: book_info.join("\n")
+                            }
+                            client.reply_message(event['replyToken'], [message, book_text])
+                        end
                     end
-                    book_title = ["登録された本はありません"]
-                    message = {
-                        type: 'text',
-                        text: book_title.join("\n")
-                    }
-                    client.reply_message(event['replyToken'], [message, show_books])
-                else
-                    inp_title = event.message['text']
-                    books = find_books(connect, id)
                 end
+            end
+        when Line::Bot::Event::Postback
+            ar = event['postback']['data'].split(",")
+            if ar[0] == "delete"
+                delete(connect, ar[1])
+                message = {
+                    type: 'text',
+                    text: "削除しました"
+                }
+                client.reply_message(event['replyToken'], message)
             end
         end
     end
