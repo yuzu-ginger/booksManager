@@ -14,6 +14,7 @@ connect = PG::connect(
 )
 
 get '/' do   # 登録form
+    p @env["QUERY_STRING"]
     if @env["QUERY_STRING"]
         @id = id
         @results = connect.exec("SELECT * FROM books WHERE userid=#{@id};")
