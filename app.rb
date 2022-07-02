@@ -7,11 +7,7 @@ require_relative 'button'
 get '/' do
     params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
     @userid = params[:id]
-    redirect "/booknew/#{@userid}"
     # # p @userid
-    # erb :booknew
-end
-get '/booknew/:id' do
     erb :booknew
 end
 

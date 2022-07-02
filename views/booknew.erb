@@ -6,8 +6,8 @@
     
     <body>
         <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-        <form action=":id/book" method="POST">
-            <%=userid=@userid%>
+        <form action="book" method="POST">
+            <%name="userid" value=@userid%>
             <p>
                 タイトル: <input type="text" name="title">
             </p>
