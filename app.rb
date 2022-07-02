@@ -20,6 +20,8 @@ get '/' do   # 登録form
         @results = connect.exec("SELECT * FROM books;")
         @results.each do |result|
             p result['title']
+            p result['userid']
+            p id
         end
         erb :index
     else
