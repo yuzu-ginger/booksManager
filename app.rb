@@ -92,6 +92,7 @@ post '/callback' do
                             book_title << "・#{x['title']}"
                         end
                     end
+                    book_title = ["登録された本はありません"]
                     message = {
                         type: 'text',
                         text: book_title.join("\n")
