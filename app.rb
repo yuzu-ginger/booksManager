@@ -15,12 +15,12 @@ connect = PG::connect(
 
 get '/' do   # 登録form
     p @env["QUERY_STRING"]
-    if @env["QUERY_STRING"]
+    if @env["QUERY_STRING"].empty?
+        erb :booknew
+    else
         @id = id
         @results = connect.exec("SELECT * FROM books where userid=#{@id};")
         erb :index
-    else
-        erb :booknew
     end
 end
 
