@@ -93,7 +93,7 @@ post '/callback' do
                         end
                         book_title.join("\n")
                     end
-                    p book_title
+                    book_title = "あいうえお"
                     message = {
                         type: 'text',
                         text: book_title
