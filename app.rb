@@ -4,16 +4,19 @@ require 'line/bot'
 require 'pg'
 require_relative 'button'
 
+userid = ""
+
 get '/' do
     params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
-    @userid = params[:id]
+    userid = params[:id]
+    p userid
     # # p @userid
     erb :booknew
 end
 
 post '/book' do
     @userid = params[:userid]
-    p @userid
+    p userid
     @title = params[:title]
     @author = params[:author]
     @body = params[:body]
