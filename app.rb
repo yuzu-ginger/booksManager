@@ -6,6 +6,7 @@ require_relative 'button'
 
 get '/' do
     @userid=params[:id]
+    p @userid
     erb :booknew
 end
 
