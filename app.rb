@@ -89,10 +89,11 @@ post '/callback' do
                         book_title = "登録された本はありません"
                     else
                         books.each do |x|
-                            book_title << x['title']
+                            book_title << "・#{x['title']}"
                         end
                         book_title.join("\n")
                     end
+                    p book_title
                     message = {
                         type: "text",
                         text: book_title
