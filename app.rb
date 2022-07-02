@@ -4,9 +4,9 @@ require 'line/bot'
 require 'pg'
 require_relative 'button'
 
-get '/:id' do
-    @userid=params[:id]
-    erb :booknew
+get '/' do
+    # @userid=params[:id]
+    erb :index
 end
 
 post '/book' do
