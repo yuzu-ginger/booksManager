@@ -5,7 +5,7 @@ require 'pg'
 require_relative 'button'
 
 userid = ""
-connect = PG::connect(
+@connect = PG::connect(
     host: ENV["PSQL_HOST"],
     user: ENV["PSQL_USER"],
     password: ENV["PSQL_PASS"],
@@ -24,12 +24,12 @@ post '/book' do
     @title = params[:title]
     @author = params[:author]
     @publisher = params[:publisher]
-    connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
+    @connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
     erb :book
 end
 
 def find_id(userid)
-    results = connect.exec("SELECT * FROM userindex")
+    results = @connect.exec("SELECT * FROM userindex")
     return reply_id(results, userid)
 end
 
