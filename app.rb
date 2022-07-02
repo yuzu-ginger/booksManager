@@ -2,12 +2,12 @@ require 'bundler/setup'
 require 'sinatra'
 require 'line/bot'
 
-get '/' do
+get '/:id' do
+    "Hello, #{params[:id]}"
     erb :booknew
 end
 
-post '/book/:id' do
-    "Hello, #{params[:id]}"
+post '/book' do
     @title = params[:title]
     @author = params[:author]
     @body = params[:body]
