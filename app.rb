@@ -4,7 +4,7 @@ require 'line/bot'
 
 get '/:id' do
     "Hello, #{params[:id]}"
-    erb :booknew
+    #erb :booknew
 end
 
 post '/book' do
