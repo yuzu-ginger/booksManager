@@ -29,7 +29,6 @@ def find_id(userid)
 end
 
 def reply_id(connect, results, userid)   # useridに対応するidを返す.なければ作る
-    p userid
     results.each do |result|
         if result['userid'] == userid
             return result['id']
@@ -59,13 +58,12 @@ post '/callback' do
     events.each do |event|
         userid = event['source']['userId']
         id = find_id(userid)
-        p id
         case event
         when Line::Bot::Event::Message
             case event.type
             when Line::Bot::Event::MessageType::Text
                 if event.message['text'] == "新規登録"
-                    client.reply_message(event['replyToken'], form(id))
+                    client.reply_message(event['replyToken'], form(id.to_s))
                 end
             end
         end
