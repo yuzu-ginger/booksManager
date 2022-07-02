@@ -5,7 +5,7 @@ require 'pg'
 require_relative 'button'
 
 userid = ""
-@connect = PG::connect(
+connect = PG::connect(
     host: ENV["PSQL_HOST"],
     user: ENV["PSQL_USER"],
     password: ENV["PSQL_PASS"],
@@ -24,23 +24,23 @@ post '/book' do
     @title = params[:title]
     @author = params[:author]
     @publisher = params[:publisher]
-    @connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
+    connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
     erb :book
 end
 
-def find_id(userid)
-    results = @connect.exec("SELECT * FROM userindex")
-    return reply_id(results, userid)
+def find_id(connect, userid)
+    results = connect.exec("SELECT * FROM userindex")
+    return reply_id(connect, results, userid)
 end
 
-def reply_id(results, userid)   # useridに対応するidを返す.なければ作る
+def reply_id(connect, results, userid)   # useridに対応するidを返す.なければ作る
     results.each do |result|
         if result['userid'] == userid
             return result['id']
         end
     end
     connect.exec("INSERT INTO userindex (userid) VALUES ('#{userid}');")
-    return find_id(userid)
+    return find_id(connect, userid)
 end
 
 def client
@@ -62,7 +62,7 @@ post '/callback' do
   
     events.each do |event|
         userid = event['source']['userId']
-        id = find_id(userid)
+        id = find_id(connect, userid)
         case event
         when Line::Bot::Event::Message
             case event.type
