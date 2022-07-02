@@ -93,6 +93,7 @@ post '/callback' do
                         end
                         text.join("\n")
                     end
+                    p text
                     message = {
                         type: "text",
                         text: text
