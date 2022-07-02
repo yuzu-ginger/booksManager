@@ -28,7 +28,7 @@ def find_id(userid)
     return reply_id(results)
 end
 
-def reply_id   # useridに対応するidを返す.なければ作る
+def reply_id(results)   # useridに対応するidを返す.なければ作る
     results.each do |result|
         if result['userid'] == userid
             return result['id']
