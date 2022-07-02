@@ -20,3 +20,26 @@ def form(id)
       }
   }
 end
+
+def show_books(id)
+  choice1 = "詳細"
+  {
+      "type": "template",
+      "altText": "蔵書一覧",
+
+      "template": {
+          "type": "buttons",
+          "title": "蔵書一覧",
+          "text": "詳細はボタンをタップしてください",
+
+          # ポストバックアクション
+          "actions": [
+              {
+                  type: 'uri',
+                  label: choice1,   # 必須または任意
+                  uri: "https://liff.line.me/1657269514-NWB4YYMB/#{id}"  # 必須
+              }
+          ]
+      }
+  }
+end
