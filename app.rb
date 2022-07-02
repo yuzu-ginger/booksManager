@@ -14,10 +14,16 @@ connect = PG::connect(
 )
 
 get '/' do   # 登録form
-    params[:id] = @env["QUERY_STRING"].match(/2F/).post_match
-    id = params[:id]
-    p id
-    erb :booknew
+    id = @env["QUERY_STRING"].match(/2F/).post_match
+    if id == /^[0-9]$/
+        id = id.to_i
+        p id
+        erb :booknew
+    else
+        id = id.match(/2F/).post_match.to_i
+        p id
+        erb :index
+    end
 end
 
 post '/book' do   # 登録完了ページ
