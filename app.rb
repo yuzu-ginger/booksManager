@@ -25,10 +25,10 @@ def find_id(userid)
         port: "5432"
     )
     results = connect.exec("SELECT * FROM userindex")
-    return reply_id(results, userid)
+    return reply_id(connect, results, userid)
 end
 
-def reply_id(results, userid)   # useridに対応するidを返す.なければ作る
+def reply_id(connect, results, userid)   # useridに対応するidを返す.なければ作る
     p userid
     results.each do |result|
         if result['userid'] == userid
