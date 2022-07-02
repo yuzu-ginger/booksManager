@@ -29,14 +29,14 @@ def find_id(userid)
 end
 
 def reply_id(results, userid)   # useridに対応するidを返す.なければ作る
+    p userid
     results.each do |result|
         if result['userid'] == userid
             return result['id']
-        else
-            connect.exec("INSERT INTO userindex (userid) VALUES ('#{userid}');")
-            return find_id(userid)
         end
     end
+    connect.exec("INSERT INTO userindex (userid) VALUES ('#{userid}');")
+    return find_id(userid)
 end
 
 def client
