@@ -4,7 +4,7 @@ require 'line/bot'
 require 'pg'
 require_relative 'button'
 
-get ':id' do
+get '/:id' do
     @userid=params[:id]
     erb :newbook
 end
