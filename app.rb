@@ -59,6 +59,7 @@ post '/callback' do
     events.each do |event|
         userid = event['source']['userId']
         id = find_id(userid)
+        p id
         case event
         when Line::Bot::Event::Message
             case event.type
