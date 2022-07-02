@@ -13,18 +13,17 @@ connect = PG::connect(
     port: "5432"
 )
 
-get '/' do
+get '/' do   # 登録form
     params[:id] = @env["QUERY_STRING"].match(/2F/).post_match.to_i
     userid = params[:id]
     erb :booknew
 end
 
-post '/book' do
-    # p userid
+post '/book' do   # 登録完了ページ
     @title = params[:title]
     @author = params[:author]
     @publisher = params[:publisher]
-    connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
+    @error = true unless connect.exec("INSERT INTO books (userid, title, author, publisher) VALUES (#{userid.to_i}, '#{@title}', '#{@author}', '#{@publisher}');")
     erb :book
 end
 
@@ -41,6 +40,17 @@ def reply_id(connect, results, userid)   # useridに対応するidを返す.な�
     end
     connect.exec("INSERT INTO userindex (userid) VALUES ('#{userid}');")
     return find_id(connect, userid)
+end
+
+def find_books(connect, userid)
+    results = connect.exec("SELECT * FROM books")
+    books = []
+    results.each do |result|
+        if result['userid'] == userid
+            books << "・#{result['title']}"
+        end
+    end
+    return books == [] ? "登録された本はありません" : books
 end
 
 def client
@@ -68,7 +78,14 @@ post '/callback' do
             case event.type
             when Line::Bot::Event::MessageType::Text
                 if event.message['text'] == "新規登録"
-                    client.reply_message(event['replyToken'], form(id.to_s))
+                    client.reply_message(event['replyToken'], form(id))
+                elsif event.message['text'] == "一覧"
+                    books = find_books(connect, userid)
+                    message = {
+                        type: "text",
+                        text: books.join("\n")
+                    }
+                    client.reply_message(event['replyToken'], message)
                 end
             end
         end

@@ -6,10 +6,14 @@
     
     <body>
         <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-        以下の本を登録しました！
-        <div>タイトル: <%=@title%></div>
-        <div>著者: <%=@author%></div>
-        <div>出版社: <%=@publisher%></div>
+        <%if @error%>
+            登録に失敗しました
+        <%else%>
+            以下の本を登録しました！
+            <div>タイトル: <%=@title%></div>
+            <div>著者: <%=@author%></div>
+            <div>出版社: <%=@publisher%></div>
+        <%end%>
     </body>
     
 </html>
