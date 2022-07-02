@@ -18,7 +18,9 @@ get '/' do   # 登録form
     if id[0] == "A"
         id = id.match(/2F/).post_match.to_i
         @results = connect.exec("SELECT * FROM books;")
-        p @resutlts || -1
+        @results.each do |result|
+            p result['title']
+        end
         erb :index
     else
         @id = id.to_i

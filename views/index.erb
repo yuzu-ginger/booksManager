@@ -8,6 +8,7 @@
         <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
         <%= @results %>
         <% @results.each do |result|%>
+          <%= result['title']%>
           <% if result['userid'] == @id %>
             <%= result['title'] %>
           <% end %>
