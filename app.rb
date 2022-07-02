@@ -10,7 +10,7 @@ post '/book' do
     @title = params[:title]
     @author = params[:author]
     @body = params[:body]
-    p @title
+    p @author
     erb :book
 end
 
