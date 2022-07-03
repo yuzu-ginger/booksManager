@@ -1,4 +1,4 @@
-def form
+def form   # New registration of books
   choice1 = "本を登録する"
   {
       "type": "template",
@@ -9,19 +9,18 @@ def form
           "title": "本の登録フォーム",
           "text": "タップしてください",
 
-          # ポストバックアクション
           "actions": [
               {
                   type: 'uri',
-                  label: choice1,   # 必須または任意
-                  uri: "https://liff.line.me/1657269514-NWB4YYMB/"  # 必須
+                  label: choice1,
+                  uri: "https://liff.line.me/1657269514-NWB4YYMB/"
               }
           ]
       }
   }
 end
 
-def show_books
+def show_books     # View all books
   choice1 = "詳細"
   {
       "type": "template",
@@ -32,26 +31,25 @@ def show_books
           "title": "蔵書一覧",
           "text": "詳細はボタンをタップしてください",
 
-          # ポストバックアクション
           "actions": [
               {
                   type: 'uri',
-                  label: choice1,   # 必須または任意
-                  uri: "https://liff.line.me/1657269514-NWB4YYMB/A"  # 必須
+                  label: choice1,
+                  uri: "https://liff.line.me/1657269514-NWB4YYMB/A"
               }
           ]
       }
   }
 end
 
-def delete_book(title, book_id)
+def delete_book(title, book_id)  # Confirmation button to delete the book
   {
-    "type": "template",    # 必須
-    "altText": "本の削除",   # 必須
-    "template": {          # 必須
-        "type": "confirm",         # 必須
-        "text": "#{title}を本当に削除しますか?",   # 必須
-        "actions": [               # 必須
+    "type": "template",
+    "altText": "本の削除",
+    "template": {
+        "type": "confirm",
+        "text": "#{title}を本当に削除しますか?",
+        "actions": [
             {
                 "type": "postback",
                 "label": "はい",

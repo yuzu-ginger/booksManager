@@ -3,8 +3,11 @@ require 'sinatra'
 require 'line/bot'
 require 'pg'
 require_relative 'button'
+require_relative 'db_operation'
 
-id = ""
+id = ""     # LINEuserID
+
+# Information for connecting to postgresql
 connect = PG::connect(
     host: ENV["PSQL_HOST"],
     user: ENV["PSQL_USER"],
@@ -13,18 +16,20 @@ connect = PG::connect(
     port: "5432"
 )
 
-get '/' do   # 登録form
-    p @env["QUERY_STRING"]
-    if @env["QUERY_STRING"].empty?
+# Book new registration form or List page of all books of the user
+get '/' do
+    if @env["QUERY_STRING"].empty?  # new registration
         erb :booknew
     else
+        # List page of all books
         @id = id
         @results = connect.exec("SELECT * FROM books where userid=#{@id};")
         erb :index
     end
 end
 
-post '/book' do   # 登録完了ページ
+# Page where the book registration completion message is displayed
+post '/book' do
     @title = params[:title]
     @author = params[:author]
     @publisher = params[:publisher]
@@ -32,34 +37,8 @@ post '/book' do   # 登録完了ページ
     erb :book
 end
 
-def find_id(connect, userid)
-    results = connect.exec("SELECT * FROM userindex;")
-    return reply_id(connect, results, userid)
-end
 
-def reply_id(connect, results, userid)   # useridに対応するidを返す.なければ作る
-    results.each do |result|
-        if result['userid'] == userid
-            return result['id']
-        end
-    end
-    connect.exec("INSERT INTO userindex (userid) VALUES ('#{userid}');")
-    return find_id(connect, userid)
-end
-
-def find_books(connect, id)
-    results = connect.exec("SELECT * FROM books where userid=#{id};")
-    books = []
-    results.each do |result|
-        books << {"id"=>result['id'], "title"=>result['title']}
-    end
-    return books
-end
-
-def delete(connect, book_id)
-    results = connect.exec("delete from books where id=#{book_id.to_i};")
-end
-
+# Messaging API
 def client
     @client ||= Line::Bot::Client.new { |config|
       config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
@@ -84,13 +63,9 @@ post '/callback' do
         when Line::Bot::Event::Message
             case event.type
             when Line::Bot::Event::MessageType::Text
-                no_book = {
-                    type: 'text',
-                    text: "まだ本が登録されていないか、該当する本がありません"
-                }
-                if event.message['text'] == "new"   # 新規登録
+                if event.message['text'] == "new"   # New registration of books
                     client.reply_message(event['replyToken'], form)
-                elsif event.message['text'] == "how to use"
+                elsif event.message['text'] == "how to use"  # How to use
                     message1 = {
                         type: 'text',
                         text: "まずは「Add a new book」で本を登録しましょう！"
@@ -105,13 +80,20 @@ post '/callback' do
                     }
                     client.reply_message(event['replyToken'], [message1, message2, message3])
                 else
-                    books = find_books(connect, id)
-                    if books.empty?    # 本棚が空のとき
+                    # Message when the book is not found
+                    no_book = {
+                        type: 'text',
+                        text: "まだ本が登録されていないか、該当する本がありません"
+                    }
+                    # View all books or Delete books
+                    books = find_books(connect, id)  # Find books information
+                    if books.empty?                  # If the book is not found
                         client.reply_message(event['replyToken'], no_book)
                     end
-                    if event.message['text'] == "index"  # 蔵書一覧
+                    if event.message['text'] == "index"  # View the list of registered books
                         book_title = []
-                        count = 0
+                        count = 0          # How many books
+                        # Get book's title and how many books user has
                         books.each do |x|
                             count += 1
                             book_title << "・#{x['title']}"
@@ -125,33 +107,35 @@ post '/callback' do
                             text: book_title.join("\n")
                         }
                         client.reply_message(event['replyToken'], [message, book_text, show_books])
-                    elsif event.message['text'] =~ /\A[0-9]+\z/  # 削除ID
+                    elsif event.message['text'] =~ /\A[0-9]+\z/  # if a number is entered, delete the book
                         book_id = ""
                         title = ""
+                        # Get the information of the book whose ID matches the entered number
                         books.each do |x|
                             if x['id'] == event.message['text']
                                 book_id = x['id']
                                 title = x['title']
                             end
                         end
-                        if book_id.empty?  # idが見つからなかった場合
+                        if book_id.empty?  # if the book is not found
                             client.reply_message(event['replyToken'], no_book)
-                        else    # 削除ボタン
+                        else    # delete confirmation bottun
                             client.reply_message(event['replyToken'], delete_book(title, book_id))
                         end
-                    else   # 文字列(タイトルとして検索)
+                    else   # if strings are entered, search book's title
                         inp_title = event.message['text']
-                        book_info = []
+                        book_info = []   # Information about id and title of the books
                         book_title = []
                         book_id = []
-                        count = 0
+                        count = 0        # How many books
+                        # Get information about books
                         books.each do |x|
-                            if inp_title == "delete"
+                            if inp_title == "delete"     # if 「delete」is entered, find user's all books
                                 book_title << x['title']
                                 book_id << x['id']
                                 book_info << "・ID #{x['id']}：#{x['title']}"
                                 count += 1
-                            else
+                            else                         # search book's title
                                 if x['title'] =~ /#{inp_title}/
                                     book_title << x['title']
                                     book_id << x['id']
@@ -160,15 +144,16 @@ post '/callback' do
                                 end
                             end
                         end
-                        if count == 0
+                        # Reply massage
+                        if count == 0    # If books are not found
                             message = {
                                 type: 'text',
                                 text: "「#{inp_title}」という本は見つかりませんでした"
                             }
                             client.reply_message(event['replyToken'], message)
-                        elsif count == 1
+                        elsif count == 1  # If only one book is found, ask if user wants to delete it
                             client.reply_message(event['replyToken'], delete_book(book_title[0], book_id[0]))
-                        else
+                        else  # If some books are found, display the list
                             message = {
                                 type: 'text',
                                 text: "#{count}冊の本がヒットしました。\n\n削除する本のIDを半角で入力してください"
@@ -183,6 +168,7 @@ post '/callback' do
                 end
             end
         when Line::Bot::Event::Postback
+            # When user taps the button, delete the book from booksDB
             ar = event['postback']['data'].split(",")
             if ar[0] == "delete"
                 delete(connect, ar[1])
