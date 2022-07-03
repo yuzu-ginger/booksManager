@@ -129,7 +129,6 @@ post '/callback' do
                         book_id = ""
                         title = ""
                         books.each do |x|
-                            p [x['id'], event.message['text']]
                             if x['id'] == event.message['text']
                                 book_id = x['id']
                                 title = x['title']
@@ -153,7 +152,6 @@ post '/callback' do
                                 book_info << "・ID #{x['id']}：#{x['title']}"
                                 count += 1
                             else
-                                p [x['id'], inp_title]
                                 if x['title'] =~ /#{inp_title}/
                                     book_title << x['title']
                                     book_id << x['id']
