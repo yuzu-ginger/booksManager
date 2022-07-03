@@ -129,6 +129,7 @@ post '/callback' do
                         book_id = ""
                         title = ""
                         books.each do |x|
+                            p [x['id'], event.message['text']]
                             if x['id'] == event.message['text']
                                 book_id = x['id']
                                 title = x['title']
