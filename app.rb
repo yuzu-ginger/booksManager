@@ -153,6 +153,7 @@ post '/callback' do
                                 book_info << "・ID #{x['id']}：#{x['title']}"
                                 count += 1
                             else
+                                p [x['id'], inp_title]
                                 if x['title'] =~ /#{inp_title}/
                                     book_title << x['title']
                                     book_id << x['id']
